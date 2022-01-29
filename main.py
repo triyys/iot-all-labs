@@ -3,7 +3,9 @@ import random
 import paho.mqtt.client as mqttclient
 import time
 import json
-import geocoder
+from selenium import webdriver 
+from selenium.webdriver.chrome.options import Options 
+from selenium.webdriver.support.ui import WebDriverWait
 
 BROKER_ADDRESS = "demo.thingsboard.io"
 PORT = 1883
@@ -34,6 +36,22 @@ def connected(client, usedata, flags, rc):
         print("Connection is failed")
 
 
+def getLocation():
+    options = Options()
+    options.add_argument("--use--fake-ui-for-media-stream")
+    driver = webdriver.Chrome(executable_path = 'D:\\chromedriver.exe',options=options)
+    timeout = 20
+    driver.get("https://www.google.com/maps/")
+    wait = WebDriverWait(driver, timeout)
+    time.sleep(5)
+    
+    locatingButton = driver.find_element_by_xpath('//*[@id="pWhrzc-mylocation"]/div')
+    locatingButton.click()
+    time.sleep(2)
+    url = driver.current_url
+    res = url[url.find("@") + 1:].split(",")
+    return (float(res[0]), float(res[1]))
+
 client = mqttclient.Client("Gateway_Thingsboard")
 client.username_pw_set(THINGS_BOARD_ACCESS_TOKEN)
 
@@ -50,16 +68,16 @@ light_intesity = 100
 
 
 while True:
-    g = geocoder.ip('me')
+    latitude, longitude = getLocation()
     collect_data = {
         'temperature': temp,
         'humidity': humi,
         'light': light_intesity,
-        'longitude': g.latlng[1],
-        'latitude': g.latlng[0]
+        'longitude': longitude, # 106.6297
+        'latitude': latitude # 10.8231
     }
     temp = -60 + random.random() * (60 - -60)
     humi = random.random() * (100 - 0)
     light_intesity += 1
     client.publish('v1/devices/me/telemetry', json.dumps(collect_data), 1)
-    time.sleep(5)
+    time.sleep(10)
