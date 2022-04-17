@@ -30,6 +30,7 @@ using UnityEngine.UI;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using M2MqttUnity;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Examples for the M2MQTT library (https://github.com/eclipse/paho.mqtt.m2mqtt),
@@ -130,6 +131,8 @@ namespace M2MqttUnity.Examples
             {
                 TestPublish();
             }
+
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
 
         protected override void SubscribeTopics()
@@ -164,8 +167,8 @@ namespace M2MqttUnity.Examples
                 if (connectButton != null)
                 {
                     connectButton.interactable = true;
-                    //disconnectButton.interactable = false;
-                    //testPublishButton.interactable = false;
+                    disconnectButton.interactable = false;
+                    testPublishButton.interactable = false;
                 }
             }
             else
