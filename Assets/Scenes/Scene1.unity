@@ -675,7 +675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &393960627
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1613,8 +1613,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   temperatureValue: {fileID: 575383112}
   humidityValue: {fileID: 1233675188}
-  temperatureReceivedValue: 31
-  humidityReceivedValue: 70
+  temperatureReceivedValue: 69
+  humidityReceivedValue: 90
   ledToggle: {fileID: 827241012}
   pumpToggle: {fileID: 665355851}
   ledToggleBackground: {fileID: 459087358}
@@ -1869,7 +1869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1171546618
 Transform:
   m_ObjectHideFlags: 0

@@ -5,16 +5,29 @@ using UnityEngine.UI;
 
 public class StationData
 {
-    public string ProjectId { get; set; }
+    public int Temperature { get; set; }
+    public int Humidity { get; set; }
+    public bool Led { get; set; }
+    public bool Pump { get; set; }
+
+    public StationData(int temperature = 0, int humidity = 0, bool led = false, bool pump = false)
+    {
+        Temperature = temperature;
+        Humidity = humidity;
+        Led = led;
+        Pump = pump;
+    }
 }
 
 public class DashboardManager : MonoBehaviour
 {
+    private StationData stationData;
+
     [Header("User Interface")]
     public Text temperatureValue;
     public Text humidityValue;
-    public int temperatureReceivedValue = 69;
-    public int humidityReceivedValue = 90;
+    public int temperatureReceivedValue;
+    public int humidityReceivedValue;
 
     public Toggle ledToggle;
     public Toggle pumpToggle;
@@ -26,6 +39,7 @@ public class DashboardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        stationData = new StationData();
         temperatureValue.text = $"{ temperatureReceivedValue }°C";
         humidityValue.text = $"{ humidityReceivedValue }%";
     }
@@ -38,11 +52,13 @@ public class DashboardManager : MonoBehaviour
 
     public void HandleLedToggleClick()
     {
+        stationData.Led = ledToggle.isOn;
         ledToggleBackground.sprite = ledToggle.isOn ? activeToggleSprite : inActiveToggleSprite;
     }
 
     public void HandlePumpToggleClick()
     {
+        stationData.Pump = pumpToggle.isOn;
         pumpToggleBackground.sprite = pumpToggle.isOn ? activeToggleSprite : inActiveToggleSprite;
     }
 }
