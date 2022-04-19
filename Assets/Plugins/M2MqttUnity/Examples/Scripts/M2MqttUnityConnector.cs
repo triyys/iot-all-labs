@@ -56,6 +56,8 @@ namespace M2MqttUnity.Examples
         public Text brokerUri;
         public Text username;
         public Text password;
+        public GameObject loginPage;
+        public GameObject dashboardPage;
 
         private List<string> eventMessages = new List<string>();
         private bool updateUI = false;
@@ -67,6 +69,13 @@ namespace M2MqttUnity.Examples
             mqttUserName = username.text;
             mqttPassword = password.text;
             Connect();
+            RoutingPage();
+        }
+
+        private void RoutingPage()
+        {
+            loginPage.gameObject.SetActive(false);
+            dashboardPage.gameObject.SetActive(true);
         }
 
         public void TestPublish()
