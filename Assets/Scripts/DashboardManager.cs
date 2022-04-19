@@ -10,6 +10,12 @@ public class StationData
 
 public class DashboardManager : MonoBehaviour
 {
+    [Header("User Interface")]
+    public Text temperatureValue;
+    public Text humidityValue;
+    public int temperatureReceivedValue = 69;
+    public int humidityReceivedValue = 90;
+
     public Toggle ledToggle;
     public Toggle pumpToggle;
     public Image ledToggleBackground;
@@ -20,7 +26,8 @@ public class DashboardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //HandleLedToggleClick();
+        temperatureValue.text = $"{ temperatureReceivedValue }°C";
+        humidityValue.text = $"{ humidityReceivedValue }%";
     }
 
     // Update is called once per frame

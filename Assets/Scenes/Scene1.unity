@@ -675,7 +675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &393960627
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1080,7 +1080,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "31\xB0C"
+  m_Text: 
 --- !u!222 &575383113
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1445,8 +1445,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 840239718}
   m_TextComponent: {fileID: 613984355}
   m_Placeholder: {fileID: 1270447087}
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -1611,6 +1611,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4a1966b6030af2408e41dd441f623b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  temperatureValue: {fileID: 575383112}
+  humidityValue: {fileID: 1233675188}
+  temperatureReceivedValue: 31
+  humidityReceivedValue: 70
   ledToggle: {fileID: 827241012}
   pumpToggle: {fileID: 665355851}
   ledToggleBackground: {fileID: 459087358}
@@ -1865,7 +1869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1171546618
 Transform:
   m_ObjectHideFlags: 0
@@ -2031,7 +2035,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 70%
+  m_Text: 
 --- !u!222 &1233675189
 CanvasRenderer:
   m_ObjectHideFlags: 0
