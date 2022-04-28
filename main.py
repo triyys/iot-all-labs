@@ -3,7 +3,31 @@ import random
 import paho.mqtt.client as mqttclient
 import time
 import json
-import geocoder
+import serial.tools.list_ports
+
+mess = ""
+bbc_port = ""
+if len(bbc_port) > 0:
+    ser = serial.Serial(port=bbc_port, baudrate=115200)
+    
+def processData(data: str):
+    data = data.replace("!", "").replace("#", "")
+    splitData = data.split(":")
+    print(splitData)
+    
+def readSerial():
+    bytesToRead = ser.inWaiting()
+    if bytesToRead > 0:
+        global mess
+        mess = mess + ser.read(bytesToRead).decode("UTF-8")
+        while ("#" in mess) and ("!" in mess):
+            start = mess.find("!")
+            end = mess.find("#")
+            processData(mess[start: end + 1])
+            if end == len(mess):
+                mess = ""
+            else:
+                mess = mess[end + 1:]
 
 BROKER_ADDRESS = "demo.thingsboard.io"
 PORT = 1883
@@ -16,12 +40,15 @@ def subscribed(client, userdata, mid, granted_qos):
 
 def recv_message(client, userdata, message):
     print("Received: ", message.payload.decode("utf-8"))
-    temp_data = {'value': True}
+    print("From: ", client)
     try:
         jsonobj = json.loads(message.payload)
-        if jsonobj['method'] == "setValue":
-            temp_data['value'] = jsonobj['params']
-            client.publish('v1/devices/me/attributes', json.dumps(temp_data), 1)
+        
+        if jsonobj['method'] == "setLED":
+            client.publish('v1/devices/me/attributes', json.dumps({ 'isLedOn': jsonobj['params'] }), 1)
+            
+        if jsonobj['method'] == "setPump":
+            client.publish('v1/devices/me/attributes', json.dumps({ 'isPumpOn': jsonobj['params'] }), 1)
     except:
         pass
 
@@ -50,13 +77,10 @@ light_intesity = 100
 
 
 while True:
-    g = geocoder.ip('me')
     collect_data = {
         'temperature': temp,
         'humidity': humi,
         'light': light_intesity,
-        'longitude': g.latlng[1],
-        'latitude': g.latlng[0]
     }
     temp = -60 + random.random() * (60 - -60)
     humi = random.random() * (100 - 0)
