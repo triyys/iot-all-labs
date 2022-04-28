@@ -14,7 +14,13 @@ def processData(data: str):
     data = data.replace("!", "").replace("#", "")
     splitData = data.split(":")
     # TODO convert to JSON
-    return splitData
+    if splitData[1] == 'TEMP':
+        collectedData = { 'temperature': int(splitData[2]) }
+        client.publish('v1/devices/me/telemetry', json.dumps(collectedData), 1)
+    elif splitData[1] == 'LIGHT':
+        collectedData = { 'light': int(splitData[2]) }
+        client.publish('v1/devices/me/telemetry', json.dumps(collectedData), 1)
+    print(splitData)
     
 def readSerial():
     bytesToRead = ser.inWaiting()
@@ -24,7 +30,7 @@ def readSerial():
         while ("#" in mess) and ("!" in mess):
             start = mess.find("!")
             end = mess.find("#")
-            print(processData(mess[start: end + 1]))
+            processData(mess[start: end + 1])
             if end == len(mess):
                 mess = ""
             else:
@@ -49,9 +55,9 @@ def recv_message(client, userdata, message):
             cmdMessage = "0"
             client.publish('v1/devices/me/attributes', json.dumps({ 'isLedOn': jsonobj['params'] }), 1)
             
-        if jsonobj['method'] == "setPump":
+        if jsonobj['method'] == "setFan":
             cmdMessage = "1"
-            client.publish('v1/devices/me/attributes', json.dumps({ 'isPumpOn': jsonobj['params'] }), 1)
+            client.publish('v1/devices/me/attributes', json.dumps({ 'isFanOn': jsonobj['params'] }), 1)
     except:
         print("Could not update realtime")
     
