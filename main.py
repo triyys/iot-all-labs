@@ -1,19 +1,20 @@
 print("Xin chào ThingsBoard")
-import random
 import paho.mqtt.client as mqttclient
 import time
 import json
 import serial.tools.list_ports
 
 mess = ""
-bbc_port = ""
+# Use the other COM along with the one Hercules uses
+bbc_port = "COM4"
 if len(bbc_port) > 0:
     ser = serial.Serial(port=bbc_port, baudrate=115200)
     
 def processData(data: str):
     data = data.replace("!", "").replace("#", "")
     splitData = data.split(":")
-    print(splitData)
+    # TODO convert to JSON
+    return splitData
     
 def readSerial():
     bytesToRead = ser.inWaiting()
@@ -23,7 +24,7 @@ def readSerial():
         while ("#" in mess) and ("!" in mess):
             start = mess.find("!")
             end = mess.find("#")
-            processData(mess[start: end + 1])
+            print(processData(mess[start: end + 1]))
             if end == len(mess):
                 mess = ""
             else:
@@ -40,17 +41,21 @@ def subscribed(client, userdata, mid, granted_qos):
 
 def recv_message(client, userdata, message):
     print("Received: ", message.payload.decode("utf-8"))
-    print("From: ", client)
+    cmdMessage = "0"
     try:
         jsonobj = json.loads(message.payload)
         
         if jsonobj['method'] == "setLED":
+            cmdMessage = "0"
             client.publish('v1/devices/me/attributes', json.dumps({ 'isLedOn': jsonobj['params'] }), 1)
             
         if jsonobj['method'] == "setPump":
+            cmdMessage = "1"
             client.publish('v1/devices/me/attributes', json.dumps({ 'isPumpOn': jsonobj['params'] }), 1)
     except:
-        pass
+        print("Could not update realtime")
+    
+    ser.write(("%s#" % cmdMessage).encode())
 
 
 def connected(client, usedata, flags, rc):
@@ -77,13 +82,6 @@ light_intesity = 100
 
 
 while True:
-    collect_data = {
-        'temperature': temp,
-        'humidity': humi,
-        'light': light_intesity,
-    }
-    temp = -60 + random.random() * (60 - -60)
-    humi = random.random() * (100 - 0)
-    light_intesity += 1
-    client.publish('v1/devices/me/telemetry', json.dumps(collect_data), 1)
-    time.sleep(5)
+    if len(bbc_port) > 0:
+        readSerial()
+    time.sleep(1)
