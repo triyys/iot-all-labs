@@ -6,7 +6,7 @@ import serial.tools.list_ports
 
 mess = ""
 # Use the other COM along with the one Hercules uses
-bbc_port = "COM4"
+bbc_port = "COM5"
 if len(bbc_port) > 0:
     ser = serial.Serial(port=bbc_port, baudrate=115200)
     
@@ -50,14 +50,16 @@ def recv_message(client, userdata, message):
     cmdMessage = "0"
     try:
         jsonobj = json.loads(message.payload)
+        method = jsonobj['method']
+        params = jsonobj['params']
         
-        if jsonobj['method'] == "setLED":
-            cmdMessage = "0"
-            client.publish('v1/devices/me/attributes', json.dumps({ 'isLedOn': jsonobj['params'] }), 1)
+        if method == "setLED":
+            cmdMessage = "0" if params == False else "1"
+            client.publish('v1/devices/me/attributes', json.dumps({ 'isLedOn': params }), 1)
             
-        if jsonobj['method'] == "setFan":
-            cmdMessage = "1"
-            client.publish('v1/devices/me/attributes', json.dumps({ 'isFanOn': jsonobj['params'] }), 1)
+        if method == "setFan":
+            cmdMessage = "2" if params == False else "3"
+            client.publish('v1/devices/me/attributes', json.dumps({ 'isFanOn': params }), 1)
     except:
         print("Could not update realtime")
     
