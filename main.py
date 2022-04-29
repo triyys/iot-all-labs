@@ -1,4 +1,4 @@
-print("Xin chào ThingsBoard")
+print("IoT Gateway")
 import paho.mqtt.client as mqttclient
 import time
 import json
@@ -10,14 +10,15 @@ bbc_port = "COM5"
 if len(bbc_port) > 0:
     ser = serial.Serial(port=bbc_port, baudrate=115200)
     
+# data is a string with format "!{id}:{name}:{value}#"
 def processData(data: str):
     data = data.replace("!", "").replace("#", "")
     splitData = data.split(":")
-    # TODO convert to JSON
-    if splitData[1] == 'TEMP':
+    # convert to JSON and publish to dashboard
+    if splitData[1] == "TEMP":
         collectedData = { 'temperature': int(splitData[2]) }
         client.publish('v1/devices/me/telemetry', json.dumps(collectedData), 1)
-    elif splitData[1] == 'LIGHT':
+    elif splitData[1] == "LIGHT":
         collectedData = { 'light': int(splitData[2]) }
         client.publish('v1/devices/me/telemetry', json.dumps(collectedData), 1)
     print(splitData)
